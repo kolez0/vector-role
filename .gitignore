@@ -1,0 +1,6 @@
+#VSCode stuff..
+.vscode/
+# Mac OS X stuff...
+.DS_Store
+
+.ansible/*
