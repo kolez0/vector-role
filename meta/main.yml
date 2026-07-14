@@ -1,4 +1,6 @@
 galaxy_info:
+  namespace: nick_odnodvorsky
+  role_name: vector
   author: Nick Odnodvorsky
   description: Vector role for Ansible
   company: Netology
