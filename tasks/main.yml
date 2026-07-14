@@ -1,0 +1,28 @@
+---
+- name: Download Vector package
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.deb"
+    dest: "/tmp/vector-{{ vector_version }}.deb"
+    mode: '0644'
+  tags: [vector, getpackages]
+
+- name: Install Vector package
+  ansible.builtin.apt:
+    deb: "/tmp/vector-{{ vector_version }}.deb"
+  when: not ansible_check_mode
+  tags: [vector, installpackages]
+
+- name: Deploy Vector configuration
+  ansible.builtin.template:
+    src: vector.yaml.j2
+    dest: "{{ vector_config_path }}"
+    mode: '0644'
+  notify: Start vector service
+  tags: [vector, deployconfig]
+
+- name: Ensure Vector is running and enabled
+  ansible.builtin.service:
+    name: vector
+    state: started
+    enabled: true
+  when: not ansible_check_mode
