@@ -1,6 +1,6 @@
 ---
-# - name: Test Vector role
-#   hosts: localhost
-#   remote_user: root
-#   roles:
-#     - vector
+- name: Test Vector role
+  hosts: localhost
+  remote_user: root
+  roles:
+    - vector

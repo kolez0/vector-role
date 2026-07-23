@@ -20,6 +20,15 @@
   notify: Start vector service
   tags: [vector, deployconfig]
 
+- name: Validate Vector configuration
+  ansible.builtin.command:
+    cmd: vector validate "{{ vector_config_path }}"
+  register: validate_result
+  changed_when: false
+  failed_when: validate_result.rc != 0
+  when: not ansible_check_mode
+  tags: [vector, validate]
+
 - name: Ensure Vector is running and enabled
   ansible.builtin.service:
     name: vector

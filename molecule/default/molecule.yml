@@ -1,0 +1,52 @@
+---
+driver:
+  name: docker
+
+platforms:
+  - name: instance-ubuntu
+    image: geerlingguy/docker-ubuntu2404-ansible
+    platform: linux/amd64
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+
+  # - name: instance-oraclelinux
+  #   image: oraclelinux:8
+  #   platform: linux/amd64
+  #   pre_build_image: true
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:rw
+  #   cgroupns_mode: host
+  #   tmpfs:
+  #     - /tmp
+  #     - /run
+  #     - /run/lock
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      remote_tmp: /tmp
+  playbooks:
+    prepare: prepare.yml
+    converge: converge.yml
+    verify: verify.yml
+  inventory:
+    host_vars:
+      instance-ubuntu:
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_os_family: Debian
+      # instance-oraclelinux:
+      #   ansible_python_interpreter: /usr/bin/python3.9
+      #   ansible_os_family: RedHat
+
+verifier:
+  name: ansible

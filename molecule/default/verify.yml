@@ -1,0 +1,18 @@
+---
+- name: Verify
+  hosts: instance-ubuntu
+  gather_facts: true
+  tasks:
+    - name: Check Vector config is valid
+      ansible.builtin.command:
+        cmd: vector validate /etc/vector/vector.yaml
+      register: vector_validate
+      changed_when: false
+      failed_when: vector_validate.rc != 0
+
+    - name: Check Vector service is running
+      ansible.builtin.service:
+        name: vector
+        state: started
+      register: vector_service
+      failed_when: vector_service.status.ActiveState != 'active'
